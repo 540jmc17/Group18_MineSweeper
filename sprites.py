@@ -169,11 +169,15 @@ class Board:
         Documentation author: Pranav Reddy
         Creation date: September 16, 2026
         Source: GPT-5.6 assisted, conceptual idea was helped by ChatGPT. Implmentation done by Cameren.
-        Temp comment (Pranav) we need to verify this to see if everything is actually working [9/16]
         """
+        tile = self.board_list[x][y]
+
+        # Bug fix, to prevent digging from revealing a flagged safe tile. Authored by Pranav and GPT-5.6
+        if tile.flagged:
+            return True
+
         # Mark this tile as visited so the recursion does not loop back to it.
         self.dug.add((x, y))
-        tile = self.board_list[x][y]
 
         # Reveal a mine and tell main.py that the player lost.
         if tile.type == 'X':
