@@ -210,8 +210,10 @@ class Game:
 
                 # Otherwise, mark the tile as flagged
                 else:
-                    tile.flagged = True
-                    self.flags_placed += 1
+                    # Confirm that there are still flags left
+                    if self.flags_placed < self.num_mines:
+                        tile.flagged = True
+                        self.flags_placed += 1
 
     """REVEAL ALL MINES FUNCTION"""
     def reveal_all_mines(self):
