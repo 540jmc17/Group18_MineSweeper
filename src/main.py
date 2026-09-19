@@ -210,12 +210,14 @@ class Game:
 
                 # Otherwise, mark the tile as flagged
                 else:
-                    # Confirm that there are still flags left
-                    if self.flags_placed < self.num_mines:
-                        tile.flagged = True
-                        self.flags_placed += 1
+                    tile.flagged = True
+                    self.flags_placed += 1
 
     """REVEAL ALL MINES FUNCTION"""
+    """  This function is used when the player loses. It loops through every
+    tile on the board, checks whether the tile is a mine by looking for an X,
+    and if it is a mine, it changes its revealed value to true so that all the mines
+    become visible. """
     def reveal_all_mines(self):
         # Show where all mines were once the player loses
 
@@ -224,10 +226,16 @@ class Game:
             for y in range(ROWS):
 
                 # If the tile is a mine, reveal it
+                # It will check each tile on the board.
+                # "X" represents a mine, when it does find one. 
                 if self.board.board_list[x][y].type == 'X':
                     self.board.board_list[x][y].revealed = True
 
     """Check for a win condition"""
+    """ This funciton checks whether the player has won. That it will go through
+    the entire board and counts any tiles that are still covered but aren't mines.
+    If that count reaches zero, there aren't safe tiles left to uncover, so
+    the game ends and the player is marked as the winner. """
     def check_win(self):
         # Count remaining non-mine tiles
         #This function will check if the player has revealed every non-mine tile.
@@ -239,8 +247,9 @@ class Game:
         # If it is not a mine and it is not revealed, it will add to the unrevealed safe count.
         for x in range(COLS):
             for y in range(ROWS):
+                # This is checking for two things: Is that the tile still covered, and is the tile not a mine.
                 if not self.board.board_list[x][y].revealed and self.board.board_list[x][y].type != 'X':
-                    unrevealed_safe += 1
+                    unrevealed_safe += 1 # so there is still a safe tile that has not been revealed, so add to the count.
         
         #The winning declaration will be made as soon as the unrevealed safe count is equal to zero.    
         # If all safe cells are revealed, you win
@@ -248,10 +257,14 @@ class Game:
             self.playing = False
             self.game_over = True
             self.win = True
-
+# That stops active gameplay, and marks the gaem as over, and records that it was a victory. 
 
 
     """DRAW THE GAME SCREEN """
+    """The draw funciton controls the overall game display. It clears the previous
+    Screen determines whether the status should say Playing, Game Over, Game Over, or Victory,
+    displas the number of flags remaining, creates the A through J and 1 through 10 labels,
+    tells the board to draw the tiles, and then updates the Pygame window. """
     # This function will update everything the player will see on the screen.
     # It will display the game status, such as the flags left, board labels
     # and the actual Minesweeper board.
@@ -298,29 +311,40 @@ class Game:
             self.screen.blit(lbl, (MARGIN_LEFT - offset, MARGIN_TOP + (i * TILESIZE) + 8))
 
         # Draw actual tiles
+        # This tells the Board object to draw the actual Minesweeper tiles.
         self.board.draw(self.screen, self.font)
-        pygame.display.flip()
+        pygame.display.flip() # updates the Pygame window so the player can actually see the newly drawn screen.
 
     def end_screen(self):
+"""The end-screen function handles the game after a win or loss. It still checks
+whether the player closes the window, and if they click the mouse, it leaves the 
+game-over state so another round can begin. While waiting, it continues drawing the 
+finished board. """
         # This function will handle what happens after the player wins or loses.
 
         # Freeze frame; reset game state on click
+        # It checks the Pygame events.
         for event in pygame.event.get():
 
             # If the player closes the window, exit the game.
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                sys.exit() # The program exits.
 
             # If the player clicks the mouse, leave the game over state and start a new round.
+            # If the user clicks it changes game_over back to false, which allows the outer game
+            # loop in the earlier portion of main.py to move on and create a new round. 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.game_over = False  # Break out to start a new round
 
-    # Keep displaying the finished baord while the game is over.
+    # Keep displaying the finished board while the game is over.
         self.draw()
 
 
 if __name__ == "__main__":
+    """THis is the starting point of the program. It asks the player to select between
+    10 and 20 mines and validates the input. Once a valid number is entered, it creates
+    the Game object using that mine count and calls game.run() to start Minesweeper. """
     # This is where the Minesweeper program starts. 
     #It will prompt the user for the number of mines and then start the game loop.
     print("=== EECS 581: Minesweeper ===")
