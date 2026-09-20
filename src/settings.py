@@ -7,6 +7,9 @@ Inputs: None
 Outputs: Constants imported by main.py and sprites.py.
 Authors: Karim Lakhani & Zema Samuel
 Creation date: 09/17/26
+External Sources: 
+      - Tech & Gaming, "How to make Minesweeper in Pygame - Step-by-Step Tutorial for beginner":
+      https://www.youtube.com/watch?v=n0jZRlhLtt0
 """
 
 # Board dimensions (project requires a fixed 10x10 grid)
